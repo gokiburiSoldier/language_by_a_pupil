@@ -34,7 +34,7 @@ class Variable {
         void getValue(void) {
             /* string bool_true = "true"; */
             if(this->type == TYPE_INT)         cout << stoi(value);
-            else if(this->type == TYPE_STRING) cout << value;
+            else if(this->type == TYPE_STRING) cout << value.substr(1,value.size()-2);
             else if(this->type == UNDEF)       cout << UNDEF;
             else if(this->type == TYPE_BOOL)   cout << (value == "true");
         }

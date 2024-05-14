@@ -100,6 +100,7 @@ int analysis_sent(vector<string> line) {
             else raise_error(FORMAT_ERROR,"[set-end]必须设置为字符串");
             break;
         case var_code:
+            //cout << (line.size() < 4) << endl;
             if((line.size()) < 4) new_variable(line[1]);
             else 
                 new_variable(line[1],false,line[3]);
