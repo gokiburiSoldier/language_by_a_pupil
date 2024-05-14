@@ -4,8 +4,8 @@
 
 ### 词汇 
 
-output (n./v.) 输出<br>
-print  (v.) 打印
+output <sup>n./v.</sup> 输出<br>
+print  <sup>v.</sup> 打印
 
 ### 前言:
 
