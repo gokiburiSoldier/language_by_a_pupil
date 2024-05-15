@@ -31,12 +31,11 @@ class Variable {
             this->value = v;
         }
         
-        void getValue(void) {
-            /* string bool_true = "true"; */
-            if(this->type == TYPE_INT)         cout << stoi(value);
-            else if(this->type == TYPE_STRING) cout << value.substr(1,value.size()-2);
-            else if(this->type == UNDEF)       cout << UNDEF;
-            else if(this->type == TYPE_BOOL)   cout << (value == "true");
+        string getValue(void) {
+            if(this->type == TYPE_INT || this->type == TYPE_BOOL) return value;
+            else if(this->type == TYPE_STRING) return value.substr(1,value.size()-2);
+            else if(this->type == UNDEF)       return to_string(UNDEF);
+            else return "R U Sure"; /* My dear compiler,this->type must in these types,ok? */
         }
         int getType(void) {
             return this->type;

@@ -7,15 +7,18 @@
 #include "heads/data.h"
 #include "heads/variables.h"
 #include "heads/keywords.h"
+#include "heads/colors.h"
 using namespace keywords;
 
 /* 函数 */
 
 /* -报错 */
 void raise_error(int error,string reason) {
-    cout << "Error: " << errors[error] << " (Code: "  << error << "):" << endl;
+    cout << RED;
+    cout << "Error: " << errors[error] << " (Code: 0x"  << hex << error << "):" << endl;
     cout << "\t" << reason << endl;
     cout << "\tline: " << line_num << endl;
+    cout << RESET_COLOR;
     exit(0);
 }
 
@@ -33,11 +36,10 @@ void print(vector<string> ary,string sep="",string end="\n") {
         else if(regex_match(element,int_pattern) || element == "true" || element == "false");
         else {
             try {
-                global_variables[element].getValue();
+                element = global_variables[element].getValue();
             } catch(...) {
                 raise_error(NAME_ERROR,"未找到合适变量");
             }
-            continue;
         }
         cout << element << sep;
     }
