@@ -113,6 +113,7 @@ int analysis_sent(vector<string> line) {
 
 /* -运行 */
 void run(string code) {
+    if(code[code.size() - 1] == ';') code = code.substr(0,code.size() - 1);
     line_num ++;
     if(regex_match(code,keyword_pattern)) analysis_sent(tokens(code));
     else raise_error(SYNTAX_ERROR,"无法知道语句意思");
@@ -127,8 +128,8 @@ int main(int argc,char* argv[]) {
     errors[NAME_ERROR]          = "No Such Variale";
 
     if(argc == 1) {
-        run("var a = 'Hello World'");
-        run("print a,' 你好!'");
+        run("var a = 'Hello World';");
+        run("print a,' 你好!';");
     }
     else {
         for(int i = 1;i < argc;i++) run(argv[i]);
