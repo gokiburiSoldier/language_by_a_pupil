@@ -35,9 +35,9 @@ void print(vector<string> ary,string sep="",string end="\n") {
         else if(is_string(element)) element = element.substr(1,element.size()-2);
         else if(regex_match(element,int_pattern) || element == "true" || element == "false");
         else {
-            try {
+            if(count(variable_names.begin(),variable_names.end(),element) > 0) {
                 element = global_variables[element].getValue();
-            } catch(...) {
+            } else {
                 raise_error(NAME_ERROR,"未找到合适变量");
             }
         }

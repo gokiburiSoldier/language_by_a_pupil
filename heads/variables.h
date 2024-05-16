@@ -45,6 +45,7 @@ class Variable {
 /* 变量 */
 
 map<string,Variable> global_variables;
+vector<string> variable_names;
 
 /* 函数 */
 void new_variable(string name,bool isUNDEF=true,string value="") {
@@ -56,4 +57,5 @@ void new_variable(string name,bool isUNDEF=true,string value="") {
     Variable v(type,name);
     if(type != UNDEF) v.setValue(value);
     global_variables[name] = v;
+    variable_names.push_back(name);
 }
