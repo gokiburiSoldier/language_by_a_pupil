@@ -17,7 +17,7 @@ void raise_error(int error,string reason) {
     cout << RED;
     cout << "Error: " << errors[error] << " (Code: 0x"  << hex << error << "):" << endl;
     cout << "\t" << reason << endl;
-    cout << "\tline: " << line_num << endl;
+    cout << "\t\tline: " << line_num << endl;
     cout << RESET_COLOR;
     exit(0);
 }
@@ -37,7 +37,7 @@ void print(vector<string> ary,string sep="",string end="\n") {
         else {
             if(count(variable_names.begin(),variable_names.end(),element) > 0) 
                 element = global_variables[element].getValue();
-             else 
+            else 
                 raise_error(NAME_ERROR,"未找到合适变量");
         }
         cout << element << sep;
@@ -98,6 +98,16 @@ vector<string> tokens(string sent) {
                 line_tokens.push_back(";");
                 one_token = "";
                 break;
+            case '(':
+                if(one_token != "") line_tokens.push_back(one_token);
+                line_tokens.push_back("(");
+                one_token = "";
+                break;
+            case ')':
+                if(one_token != "") line_tokens.push_back(one_token);
+                line_tokens.push_back(")");
+                one_token = "";
+                break;
             default:
                 one_token += every_char;
                 break;
@@ -125,13 +135,21 @@ int analysis_sent(vector<string> line) {
             else raise_error(FORMAT_ERROR,"[set-end]必须设置为字符串");
             break;
         case var_code:
-            //cout << (line.size() < 4) << endl;
-            if((line.size()) < 4) new_variable(line[1]);
+            if((line.size()) < 4) new_variable(line[1],false,"''");
             else 
                 new_variable(line[1],false,line[3]);
             break;
+        case input_code:
+            if(count(variable_names.begin(),variable_names.end(),line[1]) > 0) {
+                if(line.size() >= 3) cout << line[2].substr(1,line[2].size()-2);
+                cin.getline(buffer,114514);
+                global_variables[line[1]].setValue(buffer);
+            } else 
+                raise_error(NAME_ERROR,"未找到合适变量");
+            break;
         case key_error_code:
             raise_error(NO_FUNC_FOUND_ERROR,"关键字["+keyword+"]不存在");
+            break;
     }
     return 0;
 }

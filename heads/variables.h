@@ -31,11 +31,14 @@ class Variable {
         ~Variable() {}
         void setValue(string v) {
             this->value = v;
+            if(regex_match(value,string_pattern1) || regex_match(value,string_pattern2)) type = TYPE_STRING;
+            else if(value == "true" || value == "false") type = TYPE_BOOL;
+            else if(regex_match(value,int_pattern)) type = TYPE_INT;
         }
         
         string getValue(void) {
             if(this->type == TYPE_INT || this->type == TYPE_BOOL) return value;
-            else if(this->type == TYPE_STRING) return value.substr(1,value.size()-2);
+            else if(this->type == TYPE_STRING) return value;
             else if(this->type == UNDEF)       return to_string(UNDEF);
             else return "R U Sure"; /* My dear compiler,this->type must in these types,ok? */
         }
