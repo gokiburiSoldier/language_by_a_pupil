@@ -4,14 +4,16 @@
 #include <typeinfo>
 
 regex keyword_pattern(R"(.* [\s\S]*)");
-regex func_pattern(R"(\w+\((\w*\)))");
-regex int_pattern(R"(^[0-9]*$)");
-regex string_pattern1(R"(\"[\s\S]*\")");
-regex string_pattern2(R"('[\s\S]*')");
+regex func_pattern(R"(\s*\w+\((\w*\))\s*)");
+regex int_pattern(R"(\s*\d+\s*)");
+regex string_pattern1(R"(\s*\"[\s\S]*\"\s*)");
+regex string_pattern2(R"(\s*'[\s\S]*'\s*)");
 
 regex var_pattern_1(R"([^\d\W][\w\D]*)");
 regex var_pattern_2(R"(@[^\d\W][\w\D]*)");
 regex var_pattern_3(R"(@\(.+\))");
+
+regex blanks(R"(\s+)");
 
 /* 变量的基本结构 */
 

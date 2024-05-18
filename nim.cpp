@@ -5,9 +5,9 @@
  * 附件: CNM,NMSL(包管理工具,脚本管理工具)
 */
 #include "heads/data.h"
-#include "heads/variables.h"
 #include "heads/keywords.h"
 #include "heads/colors.h"
+#include "heads/bool_sent.h"
 using namespace keywords;
 
 /* 函数 */
@@ -31,15 +31,14 @@ bool is_string(string s) {
 /* -输出 */
 void print(vector<string> ary,string sep="",string end="\n") {
     for(string element : ary) {
-        if(element == " " || element == ",") continue;
+        if(regex_match(element,blanks) || element == ",") continue;
         else if(is_string(element)) element = element.substr(1,element.size()-2);
         else if(regex_match(element,int_pattern) || element == "true" || element == "false");
         else {
-            if(count(variable_names.begin(),variable_names.end(),element) > 0) {
+            if(count(variable_names.begin(),variable_names.end(),element) > 0) 
                 element = global_variables[element].getValue();
-            } else {
+             else 
                 raise_error(NAME_ERROR,"未找到合适变量");
-            }
         }
         cout << element << sep;
     }
@@ -55,31 +54,54 @@ vector<string> tokens(string sent) {
     for(pointer = 0; pointer < sent.size(); pointer ++) {
         every_char = sent.at(pointer);
         if(in_string) {
-            one_token += every_char;
+            if(!need_add) {
+                need_add = true;
+                continue;
+            }
             if(every_char == sign) {
+                one_token += every_char;
                 line_tokens.push_back(one_token);
                 one_token = "";
                 in_string = false;
                 continue;
+            } else if(every_char == '\\') {
+                if(sent[pointer + 1] == 'n') one_token += "\n";
+                need_add = false;
+                continue;
+            } else {
+                one_token += every_char;
+                continue;
             }
-            else continue;
         }
-        if(every_char == ' ') {
-            if(one_token != "") line_tokens.push_back(one_token);
-            one_token = "";
-        } else if(every_char == '\'' || every_char == '"') {
-            sign = every_char;
-            one_token += every_char;
-            in_string = true;
-        } else if(every_char == SPLIT) {
-            if(one_token != "") line_tokens.push_back(one_token);
-            line_tokens.push_back(",");
-            one_token = "";
-        } else if(every_char == ';') {
-            if(one_token != "") line_tokens.push_back(one_token);
-            line_tokens.push_back(";");
-            one_token = "";
-        } else one_token += every_char;
+        switch(every_char) {
+            case ' ':
+                if(one_token != "") line_tokens.push_back(one_token);
+                one_token = "";
+                break;
+            case '\'':
+                sign = every_char;
+                one_token += every_char;
+                in_string = true;
+                break;
+            case '"':
+                sign = every_char;
+                one_token += every_char;
+                in_string = true;
+                break;
+            case SPLIT:
+                if(one_token != "") line_tokens.push_back(one_token);
+                line_tokens.push_back(",");
+                one_token = "";
+                break;
+            case ';':
+                if(one_token != "") line_tokens.push_back(one_token);
+                line_tokens.push_back(";");
+                one_token = "";
+                break;
+            default:
+                one_token += every_char;
+                break;
+        }
     }
     if(one_token != "") line_tokens.push_back(one_token);
     return line_tokens;
@@ -93,7 +115,8 @@ int analysis_sent(vector<string> line) {
             line.erase(line.begin());
             print(line,step,ending);
             break;
-        case set_step_code: 
+        case set_step_code:
+            /* cout << line[1] << endl; */
             if(is_string(line[1])) step = line[1].substr(1,line[1].size()-2);
             else raise_error(FORMAT_ERROR,"[set-step]必须设置为字符串");
             break;

@@ -17,6 +17,7 @@ string step = "";
 string ending = "\n";
 
 bool in_string = false;
+bool need_add = true;
 char sign;
 char every_char;
 
