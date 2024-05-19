@@ -15,6 +15,7 @@ string every_line;
 string one_token;
 string step = "";
 string ending = "\n";
+string pre_value;
 char buffer[114514];
 
 bool in_string = false;

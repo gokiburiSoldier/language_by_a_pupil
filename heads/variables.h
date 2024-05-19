@@ -38,7 +38,7 @@ class Variable {
         
         string getValue(void) {
             if(this->type == TYPE_INT || this->type == TYPE_BOOL) return value;
-            else if(this->type == TYPE_STRING) return value;
+            else if(this->type == TYPE_STRING) return value.substr(1,value.size() - 2);
             else if(this->type == UNDEF)       return to_string(UNDEF);
             else return "R U Sure"; /* My dear compiler,this->type must in these types,ok? */
         }

@@ -1,0 +1,3 @@
+var a;
+input a;
+print "Fuck ",a;

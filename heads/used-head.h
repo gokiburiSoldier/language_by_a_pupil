@@ -16,5 +16,6 @@ using namespace std;
 #define NO_FUNC_FOUND_ERROR 0x3002
 #define SYNTAX_ERROR        0x3003
 #define NAME_ERROR          0x3004
+#define FILE_ERROR          0x3005
 
 #define SPLIT ','
