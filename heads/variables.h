@@ -64,3 +64,7 @@ void new_variable(string name,bool isUNDEF=true,string value="") {
     global_variables[name] = v;
     variable_names.push_back(name);
 }
+
+bool is_variable(string name) {
+    return (count(variable_names.begin(),variable_names.end(),name) > 0);
+}

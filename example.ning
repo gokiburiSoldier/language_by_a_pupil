@@ -1,3 +1,6 @@
-var a;
-input a;
-print "Fuck ",a;
+var time;
+var name;
+input time,"- Will I say hello to you what times?\n-  ";
+input name,"- Who are you?\n- ";
+clear ;
+loop time {print "Hello ",name,"!";}

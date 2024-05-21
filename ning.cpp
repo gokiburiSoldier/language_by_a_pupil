@@ -36,8 +36,7 @@ void print(vector<string> ary,string sep="",string end="\n") {
         else if(is_string(element)) element = element.substr(1,element.size()-2);
         else if(regex_match(element,int_pattern) || element == "true" || element == "false");
         else {
-            /* cout << "\t" << element << endl; */
-            if(count(variable_names.begin(),variable_names.end(),element) > 0) 
+            if(is_variable(element)) 
                 element = global_variables[element].getValue();
             else 
                 raise_error(NAME_ERROR,"未找到合适变量");
@@ -110,6 +109,16 @@ vector<string> tokens(string sent) {
                 line_tokens.push_back(")");
                 one_token = "";
                 break;
+            case '{':
+                if(one_token != "") line_tokens.push_back(one_token);
+                line_tokens.push_back("{");
+                one_token = "";
+                break;
+            case '}':
+                if(one_token != "") line_tokens.push_back(one_token);
+                line_tokens.push_back("}");
+                one_token = "";
+                break;
             default:
                 one_token += every_char;
                 break;
@@ -122,13 +131,16 @@ vector<string> tokens(string sent) {
 /* -分析语句 */
 int analysis_sent(vector<string> line) {
     string keyword = line.at(0);
+    int num;
+    int time;
+    string codes;
+    bool add;
     switch(getKeywordCode(keyword)) {
         case print_code: 
             line.erase(line.begin());
             print(line,step,ending);
             break;
         case set_step_code:
-            /* cout << line[1] << endl; */
             if(is_string(line[1])) step = line[1].substr(1,line[1].size()-2);
             else raise_error(FORMAT_ERROR,"[set-step]必须设置为字符串");
             break;
@@ -153,6 +165,28 @@ int analysis_sent(vector<string> line) {
             } else 
                 raise_error(NAME_ERROR,"未找到合适变量");
             break;
+        case loop_code:
+            if(regex_match(line[1],int_pattern))
+                num = stoi(line[1]);
+            else if(is_variable(line[1]))
+                try {
+                    num = stoi(global_variables[line[1]].getValue());
+                } catch(...) {
+                    raise_error(FORMAT_ERROR,"变量数据非法");
+                }
+            else
+                raise_error(FORMAT_ERROR,"填入数据非整数 或 无合适变量");
+            add = false;
+            for(string i : line) {
+                if(i == "}") break;
+                else if(add) codes += i + " ";
+                else if(i == "{") if(!add) add = true;
+            }
+            for(time = 0; time < num; time ++) run(codes,2,false);
+            break;
+        case clear_code:
+            system("cls");
+            break;
         case key_error_code:
             raise_error(NO_FUNC_FOUND_ERROR,"关键字["+keyword+"]不存在");
             break;
@@ -161,10 +195,10 @@ int analysis_sent(vector<string> line) {
 }
 
 /* -运行 */
-void run(string code,int place) {
-    /* cout << "\t\t" << code[code.size() - 2] << endl; */
+void run(string code,int place,bool new_line = true) {
+    if(regex_match(code,blank_sent)) return ;
     if(code[code.size() - place] == ';') code = code.substr(0,code.size() - place);
-    line_num ++;
+    if(new_line) line_num ++;
     if(regex_match(code,keyword_pattern)) analysis_sent(tokens(code));
     else raise_error(SYNTAX_ERROR,"无法知道语句意思");
 }
@@ -181,10 +215,12 @@ int main(int argc,char* argv[]) {
     if(argc == 1) {
         run("var a = 'Hello World';",1);
         run("print a,' 你好!';",1);
-    }
-    else {
+    }  else {
         string address = argv[1];
-        if(fs::is_file(address)) {
+        if(address == "-v") {
+            cout << "测试版 1.0.0.0" << endl;
+            exit(0);
+        } if(fs::is_file(address)) {
             if(address.substr(address.size()-4,4) == "ning") 
                 for(string i : fs::read_lines(address)) run(i,2);
             else

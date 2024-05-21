@@ -3,7 +3,6 @@
 using namespace std;
 
 namespace fs {
-    /* ifstream in_file; */
     bool is_file(string address) {
         ifstream file(address);
         return file.is_open();
