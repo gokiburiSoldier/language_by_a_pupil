@@ -68,3 +68,12 @@ void new_variable(string name,bool isUNDEF=true,string value="") {
 bool is_variable(string name) {
     return (count(variable_names.begin(),variable_names.end(),name) > 0);
 }
+
+bool is_num(string value) {
+    return regex_match(value,int_pattern);
+}
+
+bool is_string(string s) {
+    bool res = regex_match(s,string_pattern1) || regex_match(s,string_pattern2);
+    return res;
+}

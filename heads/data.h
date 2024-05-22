@@ -30,8 +30,6 @@ regex blank_sent(R"([\s]*)");
 
 void raise_error(int error,string reason);
 
-bool is_string(string s);
-
 vector<string> tokens(string sent);
 
 int analysis_sent(vector<string> line);

@@ -1,6 +1,4 @@
-var time;
 var name;
-input time,"- Will I say hello to you what times?\n-  ";
-input name,"- Who are you?\n- ";
-clear ;
-loop time {print "Hello ",name,"!";}
+input name,"Who r u?\n";
+if name == 'sb' {loop 5{print "Hello";}}
+if name != 'sb' {print "I haven't heard";}

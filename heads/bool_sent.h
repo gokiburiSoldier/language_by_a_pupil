@@ -3,34 +3,25 @@
 #include "used-head.h"
 using namespace std;
 
-int calc_bool(string sent) {
-    vector<string> values;
-    smatch vars;
-    string op = sent;
-    size_t pos;
-    bool res;
-    regex_search(sent,vars,var_pattern_1);
-    for(auto i : vars) values.push_back(i);
-    regex_search(sent,vars,var_pattern_2);
-    for(auto i : vars) values.push_back(i);
-    regex_search(sent,vars,var_pattern_3);
-    for(auto i : vars) values.push_back(i);
-    for(int i = 0; i < values.size(); i ++) {
-        pos = sent.find(values[i]);
-        op.replace(pos,values[i].length(),"");
+int calc_bool(vector<string> sent) {
+    string v1,v2;
+    if(is_string(sent[0])) v1 = sent[0].substr(1,sent[0].size()-2);
+    else if(is_num(sent[0]) || sent[0] == "true" || sent[0] == "false") v1 = sent[0];
+    else if(is_variable(sent[0])) v1 = global_variables[sent[0]].getValue();
+    else return UNDEF;
+    if(is_string(sent[2])) v2 = sent[2].substr(1,sent[2].size()-2);
+    else if(is_num(sent[2]) || sent[2] == "true" || sent[2] == "false") v2 = sent[2];
+    else if(is_variable(sent[2])) v2 = global_variables[sent[2]].getValue();
+    else return UNDEF;
+    if(sent[1] == "==") return (v1 == v2);
+    else if(sent[1] == "!=") return (v1 != v2);
+    else {
+        if(is_num(v1) && is_num(v2)) {
+            if(sent[1] == ">") return (stoi(v1) > stoi(v2));
+            else if(sent[1] == ">=") return (stoi(v1) >= stoi(v2));
+            else if(sent[1] == "<") return (stoi(v1) < stoi(v2));
+            else if(sent[1] == "<=") return (stoi(v1) <= stoi(v2));
+        }
+        else return UNDEF;
     }
-    if(op == "==") 
-        res = global_variables[values[0]].getValue() == global_variables[values[1]].getValue();
-    else if(op == "!=") 
-        res = global_variables[values[0]].getValue() != global_variables[values[1]].getValue();
-    else if(op == ">") 
-        res = global_variables[values[0]].getValue() > global_variables[values[1]].getValue();
-    else if(op == "<") 
-        res = global_variables[values[0]].getValue() < global_variables[values[1]].getValue();
-    else if(op == ">=") 
-        res = global_variables[values[0]].getValue() >= global_variables[values[1]].getValue();
-    else if(op == "<=") 
-        res = global_variables[values[0]].getValue() <= global_variables[values[1]].getValue();
-    if(res) return 1;
-    else return 0;
 }

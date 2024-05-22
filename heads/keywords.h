@@ -11,6 +11,7 @@ namespace keywords {
     const int input_code    = 0xe06;
     const int loop_code     = 0xe07;
     const int clear_code    = 0xe08;
+    const int exit_code     = 0xe09;
     int getKeywordCode(string keyword) {
         if(keyword == "print" || keyword == "out") return print_code;
         else if(keyword == "var") return var_code;
@@ -19,6 +20,8 @@ namespace keywords {
         else if(keyword == "input" || keyword == "in") return input_code;
         else if(keyword == "loop") return loop_code;
         else if(keyword == "clear" || keyword == "cls") return clear_code;
+        else if(keyword == "exit" || keyword == "quit") return exit_code;
+        else if(keyword == "if") return if_code;
         else return key_error_code;
     }
 }

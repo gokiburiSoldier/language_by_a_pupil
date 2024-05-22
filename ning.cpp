@@ -23,12 +23,6 @@ void raise_error(int error,string reason) {
     exit(0);
 }
 
-/* -是否是字符串 */
-bool is_string(string s) {
-    bool res = regex_match(s,string_pattern1) || regex_match(s,string_pattern2);
-    return res;
-}
-
 /* -输出 */
 void print(vector<string> ary,string sep="",string end="\n") {
     for(string element : ary) {
@@ -134,8 +128,12 @@ int analysis_sent(vector<string> line) {
     int num;
     int time;
     string codes;
-    bool add;
+    bool add_codes,add_if;
+    vector<string> to_true;
     switch(getKeywordCode(keyword)) {
+        case exit_code:
+            exit(0);
+            break;
         case print_code: 
             line.erase(line.begin());
             print(line,step,ending);
@@ -176,13 +174,28 @@ int analysis_sent(vector<string> line) {
                 }
             else
                 raise_error(FORMAT_ERROR,"填入数据非整数 或 无合适变量");
-            add = false;
+            add_codes = false;
             for(string i : line) {
                 if(i == "}") break;
-                else if(add) codes += i + " ";
-                else if(i == "{") if(!add) add = true;
+                else if(add_codes) codes += i + " ";
+                else if(i == "{") if(!add_codes) add_codes = true;
             }
             for(time = 0; time < num; time ++) run(codes,2,false);
+            break;
+        case if_code:
+            add_codes = false;
+            add_if = false;
+            for(string i : line) {
+                if(add_if) to_true.push_back(i);
+                if(add_codes && i != "}") codes += i + " ";
+                if(i == "}") break;
+                else if(i == "{") {add_if = false;if(!add_codes) add_codes = true;}
+                else if(i == "if") if(!add_if) add_if = true;
+            }
+            num = calc_bool(to_true);
+            if(num == UNDEF) raise_error(FORMAT_ERROR,"我不知道");
+            else if(!num);
+            else run(codes,2,false);
             break;
         case clear_code:
             system("cls");
