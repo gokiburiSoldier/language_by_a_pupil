@@ -1,7 +1,6 @@
 #include "used-head.h"
 #include <map>
 #include <regex>
-#include <typeinfo>
 
 regex keyword_pattern(R"(.* [\s\S]*)");
 regex func_pattern(R"(\s*\w+\((\w*\))\s*)");

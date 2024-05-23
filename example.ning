@@ -1,4 +1,13 @@
 var name;
+
+print "Hello!";
+
 input name,"Who r u?\n";
-if name == 'sb' {loop 5{print "Hello";}}
-if name != 'sb' {print "I haven't heard";}
+
+if name == 'sb' {
+loop 3 {
+print 'Welcome';
+}
+}
+
+print "Goodbye!";

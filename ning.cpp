@@ -23,6 +23,13 @@ void raise_error(int error,string reason) {
     exit(0);
 }
 
+/* -统计字符个数 */
+int count_char(string str,char chr) {
+    int ctr = 0;
+    for(char c : str) if(c == chr) ctr ++;
+    return ctr;
+}
+
 /* -输出 */
 void print(vector<string> ary,string sep="",string end="\n") {
     for(string element : ary) {
@@ -127,7 +134,7 @@ int analysis_sent(vector<string> line) {
     string keyword = line.at(0);
     int num;
     int time;
-    string codes;
+    string codes,else_codes;
     bool add_codes,add_if;
     vector<string> to_true;
     switch(getKeywordCode(keyword)) {
@@ -234,8 +241,17 @@ int main(int argc,char* argv[]) {
             cout << "测试版 1.0.0.0" << endl;
             exit(0);
         } if(fs::is_file(address)) {
-            if(address.substr(address.size()-4,4) == "ning") 
-                for(string i : fs::read_lines(address)) run(i,2);
+            if(address.substr(address.size()-4,4) == "ning") {
+                vector<string> document = fs::read_lines(address);
+                string code;
+                for(string i : document) {
+                    code += i.substr(0,i.size()-1);
+                    if(count_char(code,'{') <= count_char(code,'}')) {
+                        run(code,1);
+                        code = "";
+                    }else line_num ++;
+                }
+            }
             else
                 raise_error(FILE_ERROR,"不是N.M.源代码");
         } else

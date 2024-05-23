@@ -4,6 +4,7 @@
 using namespace std;
 
 int calc_bool(vector<string> sent) {
+    if(sent.size() < 3) return UNDEF;
     string v1,v2;
     if(is_string(sent[0])) v1 = sent[0].substr(1,sent[0].size()-2);
     else if(is_num(sent[0]) || sent[0] == "true" || sent[0] == "false") v1 = sent[0];
@@ -24,4 +25,5 @@ int calc_bool(vector<string> sent) {
         }
         else return UNDEF;
     }
+    return 0;
 }
