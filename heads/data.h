@@ -28,6 +28,8 @@ map<int,string> errors;
 
 regex blank_sent(R"([\s]*)");
 
+regex ning_script(R"(.+\.(ning|nm))");
+
 void raise_error(int error,string reason);
 
 vector<string> tokens(string sent);

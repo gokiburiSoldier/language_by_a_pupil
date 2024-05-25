@@ -241,7 +241,7 @@ int main(int argc,char* argv[]) {
             cout << "测试版 1.0.0.0" << endl;
             exit(0);
         } if(fs::is_file(address)) {
-            if(address.substr(address.size()-4,4) == "ning") {
+            if(regex_match(address,ning_script)) {
                 vector<string> document = fs::read_lines(address);
                 string code;
                 for(string i : document) {
